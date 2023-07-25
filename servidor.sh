@@ -1,4 +1,22 @@
-#!/bin/bash
+#!/bin/bash 
+#
+# Instala Servidor - Automatização de Processos
+#
+# Vitor de Jesus
+# CVS $Header$
+
+shopt -s -o nounset 
+
+
+# Variáveis de configuração do servidor
+server_root="/var/www/html"  # Diretório raiz do servidor web
+server_port="80"            # Porta na qual o servidor web será executado
+index_page="index.html"     # Página de índice padrão
+
+
+# Titulo 
+printf "%s\n" "Iniciando o Servidor Web"
+printf "\n"
 
 # Verifica se o usuário é root (necessário para iniciar o servidor na porta 80)
 if [ "$EUID" -ne 0 ]; then
@@ -6,14 +24,18 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-# Variáveis de configuração do servidor
-server_root="/var/www/html"  # Diretório raiz do servidor web
-server_port="80"            # Porta na qual o servidor web será executado
-index_page="index.html"     # Página de índice padrão
 
 # Verifica se o servidor Apache está instalado
 if ! command -v apache2 >/dev/null 2>&1; then
-    echo "O servidor Apache não está instalado. Instale-o antes de continuar."
+    echo "O servidor Apache não está instalado. Vamos instalar antes de continuar."
+
+    # Atualizar o apt-get 
+    apt-get update && apt-get upgrade -y
+    sleep 3
+
+    apt-get install Apache2 -y
+    sleep 3
+
     exit 1
 fi
 
@@ -38,3 +60,7 @@ echo "O servidor web está em execução."
 echo "Diretório raiz do servidor: $server_root"
 echo "Porta do servidor: $server_port"
 echo "Página de índice padrão: $index_page"
+
+
+# Finaliza o Script
+exit 0
